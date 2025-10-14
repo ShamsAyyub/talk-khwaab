@@ -1,67 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Talk to Mahsha | Khwaab Events</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Khwaab • Talk to Mira</title>
+  <meta name="description" content="Chat with Mira — Khwaab's AI décor specialist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #faf8f6;
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+    :root{
+      /* Khwaab palette — tweak if needed */
+      --kh-ivory:#FFF8F0;
+      --kh-sage:#C8D3C0;
+      --kh-rose:#F4D6D9;
+      --kh-forest:#1B4038;
+      --kh-gold:#C7A25A;
+      --kh-ink:#131516;
+      --radius:18px;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--kh-ink);
+      background:linear-gradient(160deg,var(--kh-ivory),#ffffff);
+    }
+    .wrap{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
     }
 
-    .container {
-      text-align: center;
-      padding: 20px;
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:30;
+      backdrop-filter:saturate(180%) blur(8px);
+      background:rgba(255,255,255,.7);
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .nav{
+      max-width:1200px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 18px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .brand img{height:36px;width:auto;border-radius:8px}
+    .brand strong{font-size:15px;letter-spacing:.4px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:#fff;font-size:12px}
+    .pill .dot{width:8px;height:8px;border-radius:50%;background:#19c37d;box-shadow:0 0 0 3px rgba(25,195,125,.15)}
+
+    /* Layout: content + desktop chat panel */
+    .content{
+      max-width:1200px;margin:0 auto;flex:1;width:100%;
+      display:grid;grid-template-columns:1fr;gap:20px;padding:24px 18px 28px;
+    }
+    @media (min-width: 1024px){
+      .content{grid-template-columns:1fr 420px;align-items:start}
     }
 
-    h1 {
-      font-size: 1.6rem;
-      color: #333;
-      margin-bottom: 8px;
+    .card{
+      background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:var(--radius);box-shadow:var(--shadow);
     }
+    .hero{
+      padding:28px;position:relative;overflow:hidden;
+      background:linear-gradient(180deg,#ffffff, var(--kh-ivory));
+    }
+    .hero h1{margin:0 0 10px;font-size:28px;line-height:1.15}
+    .hero p{margin:0;color:#4a4f55}
+    .badges{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+    .badge{background:var(--kh-sage);color:#0b221b;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(0,0,0,.05)}
 
-    p {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 20px;
+    .cta{
+      margin-top:18px;display:flex;gap:12px;flex-wrap:wrap
     }
+    .btn{appearance:none;border:none;cursor:pointer;font-weight:600}
+    .btn.primary{
+      background:var(--kh-forest);color:#fff;border-radius:12px;padding:10px 14px;
+      box-shadow:0 6px 18px rgba(27,64,56,.25);
+    }
+    .btn.ghost{background:#fff;color:var(--kh-forest);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:10px 14px}
 
-    elevenlabs-convai {
-      width: 400px;
-      height: 600px;
-      max-width: 95vw;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+    /* Desktop chat panel */
+    .chat-panel{position:relative;overflow:hidden}
+    .chat-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px 12px 14px;border-bottom:1px solid rgba(0,0,0,.06);
+      background:linear-gradient(180deg,#fff,#fdfbf8);
     }
+    .chat-head .agent{display:flex;align-items:center;gap:10px}
+    .agent .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--kh-rose),var(--kh-sage));border:1px solid rgba(0,0,0,.06)}
+    .agent .name{font-weight:700;font-size:14px}
+    .agent .role{font-size:12px;color:#475157}
 
-    footer {
-      margin-top: 20px;
-      font-size: 0.85rem;
-      color: #aaa;
+    .chat-embed{width:100%;height:560px;border:0;display:block}
+    @media (min-width:1024px){.chat-embed{height:76vh}}
+
+    /* Floating button (mobile) */
+    .fab{
+      position:fixed;right:16px;bottom:16px;z-index:40;
+      display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:999px;
+      background:var(--kh-forest);color:#fff;border:1px solid rgba(0,0,0,.08);
+      box-shadow:0 12px 28px rgba(0,0,0,.18);
     }
+    .fab .spark{width:10px;height:10px;border-radius:50%;background:var(--kh-gold);box-shadow:0 0 0 5px rgba(199,162,90,.22)}
+    @media (min-width:1024px){.fab{display:none}}
+
+    /* Mobile sheet */
+    .sheet{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;z-index:50}
+    .sheet.open{display:block}
+    .sheet .panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:0 -10px 26px rgba(0,0,0,.18)}
+    .sheet .handle{width:46px;height:5px;border-radius:999px;background:#d6d6d6;margin:10px auto}
+    .sheet .head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 8px 16px;border-bottom:1px solid rgba(0,0,0,.06)}
+    .sheet .head .who{display:flex;align-items:center;gap:10px}
+    .x{background:transparent;border:none;font-size:20px;cursor:pointer;padding:8px}
+    .sheet iframe{width:100%;height:70vh;border:0;display:block}
+
+    /* Footer */
+    footer{padding:24px 18px;color:#5b646a}
+    footer .foot{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .links{display:flex;gap:14px;flex-wrap:wrap}
+    .tag{font-size:12px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:999px;padding:6px 10px}
+    /* Ensure ElevenLabs widget fills containers */
+    .chat-embed elevenlabs-convai{display:block;width:100%;height:100%}
+    .mobile-embed elevenlabs-convai{display:block;width:100%;height:70vh}
   </style>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Talk to Mahsha 💬</h1>
-    <p>Your AI event assistant for Khwaab Events. Enable your microphone to start chatting with Mahsha.</p>
+  <div class="wrap">
+    <header>
+      <div class="nav">
+        <a class="brand" href="/">
+          <img src="https://lh3.googleusercontent.com/sitesv/AICyYda8czSBDnkyJ66DBJqOC1gy3xN8i1Qf3BV8sn5RPUKFtmvOfN_4yguHEDZfdcnXSp5mtShVVCy_V7yShoF9-jKxqYLrf0adSCaD6jVVYIkVGZ5FyfFletlV1UKi0oztQheIk_fplpIkHW5eZqtPr-PJ4z4XbCBzPZS0bWhdKdAKaEPIqjAuLm5d=w16383" alt="Khwaab logo" />
+          <strong>Khwaab Events</strong>
+        </a>
+        <span class="pill"><span class="dot"></span> Mira is online</span>
+      </div>
+    </header>
 
-    <!-- ElevenLabs Conversational AI Widget -->
-    <elevenlabs-convai agent-id="agent_7201k7hq96s5e0s9e1y2yqvbwaxn"></elevenlabs-convai>
-    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+    <main class="content">
+      <!-- Left column: copy + CTA -->
+      <section class="card hero">
+        <h1>Talk to <span style="color:var(--kh-forest)">Mira</span> — your AI décor specialist</h1>
+        <p>Ask décor questions, get quotes, check dates, and plan your setup. Quick replies. No forms.</p>
+        <div class="badges">
+          <span class="badge">Instant answers</span>
+          <span class="badge">Packages & pricing</span>
+          <span class="badge">Availability</span>
+          <span class="badge">Custom ideas</span>
+        </div>
+        <div class="cta">
+          <button class="btn primary" id="openChat">Open chat</button>
+          <a class="btn ghost" href="https://khwaab.ca" target="_blank" rel="noopener">Visit khwaab.ca</a>
+        </div>
+      </section>
 
-    <footer>© Khwaab Events</footer>
+      <!-- Right column: desktop chat panel -->
+      <aside class="card chat-panel">
+        <div class="chat-head">
+          <div class="agent">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div class="name">Mira</div>
+              <div class="role">AI Décor Specialist</div>
+            </div>
+          </div>
+          <div class="pill"><span class="dot"></span> Online</div>
+        </div>
+        <!--
+          Embed your hosted chat widget here.
+          If you have a hosted widget URL, replace src below, e.g.
+          src="https://talk.khwaab.ca/widget?agent=Mira"
+        -->
+        <div class="chat-embed" id="chatFrameDesktop">
+          <elevenlabs-convai agent-id="agent_7201k7hq96s5e0s9e1y2yqvbwaxn"></elevenlabs-convai>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Mobile FAB -->
+    <button class="fab" id="fab"><span class="spark"></span> Chat with Mira</button>
+
+    <!-- Mobile bottom sheet -->
+    <div class="sheet" id="sheet" aria-hidden="true">
+      <div class="panel">
+        <div class="handle"></div>
+        <div class="head">
+          <div class="who">
+            <div class="avatar" style="width:28px;height:28px"></div>
+            <div>
+              <div class="name" style="font-size:13px;font-weight:700">Mira</div>
+              <div class="role" style="font-size:11px">AI Décor Specialist</div>
+            </div>
+          </div>
+          <button class="x" id="closeSheet" aria-label="Close">✕</button>
+        </div>
+        <div class="mobile-embed" id="chatFrameMobile">
+          <elevenlabs-convai agent-id="agent_7201k7hq96s5e0s9e1y2yqvbwaxn"></elevenlabs-convai>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="foot">
+        <small>© <span id="year"></span> Khwaab Events. All rights reserved.</small>
+        <div class="links">
+          <span class="tag">Toronto / GTA</span>
+          <span class="tag">Weddings • Dholki • Mehndi • Nikkah</span>
+        </div>
+      </div>
+    </footer>
   </div>
+
+  <script>
+    // Boot: footer year
+    const year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
+
+    // Mobile sheet logic
+    const sheet = document.getElementById('sheet');
+    const fab = document.getElementById('fab');
+    const openChat = document.getElementById('openChat');
+    const closeSheet = document.getElementById('closeSheet');
+
+    function openMobile(){
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden','false');
+    }
+    function closeMobile(){
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden','true');
+    }
+
+    fab?.addEventListener('click', openMobile);
+    openChat?.addEventListener('click', () => {
+      if (window.innerWidth < 1024) openMobile();
+      else document.querySelector('.chat-panel')?.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    closeSheet?.addEventListener('click', closeMobile);
+
+    // Close sheet when tapping backdrop
+    sheet?.addEventListener('click', (e) => { if (e.target === sheet) closeMobile(); });
+  </script>
 </body>
 </html>
