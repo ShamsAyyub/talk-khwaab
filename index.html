@@ -178,6 +178,36 @@
         <div class="chat-embed" id="chatFrameDesktop">
           <elevenlabs-convai agent-id="agent_7201k7hq96s5e0s9e1y2yqvbwaxn"></elevenlabs-convai>
         </div>
+        <!-- Mira booking link handler -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.querySelector('elevenlabs-convai');
+    if (!widget) return;
+
+    const BOOKING_URL = 'https://calendar.app.google/usEBRZFyELAmhxpi6';
+    const BOOKING_LABEL = 'Book your consultation';
+
+    widget.addEventListener('elevenlabs-convai:call', (evt) => {
+      evt.detail.config.clientTools = {
+        pushLink: () => {
+          try {
+            window.open(BOOKING_URL, '_blank', 'noopener,noreferrer');
+          } catch (e) {}
+
+          const container =
+            widget.shadowRoot?.querySelector('[data-chat]') || widget.parentElement;
+
+          const note = document.createElement('div');
+          note.style.margin = '8px 12px';
+          note.style.fontSize = '14px';
+          note.innerHTML =
+            `Booking link: <a href="${BOOKING_URL}" target="_blank" rel="noopener noreferrer">${BOOKING_LABEL}</a>`;
+          container.appendChild(note);
+        }
+      };
+    });
+  });
+</script>
       </aside>
     </main>
 
@@ -247,5 +277,6 @@
   </script>
 </body>
 </html>
+
 
 
